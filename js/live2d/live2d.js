@@ -18,6 +18,12 @@ let model = null;
 let ready = false;
 let currentExpr = null;
 
+/* 统一的加载日志：优先输出到屏上「加载进程」面板，其次控制台 */
+function log(msg, kind) {
+  if (window.__log) window.__log(msg, kind);
+  else (kind === 'err' ? console.error : console.log)('[Live2D]', msg);
+}
+
 /* 表情参数 ID（模型 moc3 中已内置） */
 const EXPR_IDS = ['dai', 'weapon', 'pad', 'sing', 'game', 'cry', 'sad', 'han', 'angry', 'yinan', 'lianhong'];
 
@@ -58,6 +64,7 @@ function bindExprButtons() {
 export async function initLive2D() {
   if (app) return;
   try {
+    log('初始化 Live2D（pixi 应用）…');
     var canvas = document.getElementById('live2d-canvas');
     var wrap = document.getElementById('live2d-wrap');
     app = new Application({
@@ -68,10 +75,15 @@ export async function initLive2D() {
       resizeTo: wrap,
       antialias: true
     });
+    log('pixi 应用就绪');
     /* 模型地址用绝对 URL：库内旧版 url.resolve 以 location.origin 为基准，
        相对路径会在 GitHub Pages 子路径下错误地解析到域名根（404） */
     var modelURL = new URL('live2d/peilika/Q扁佩丽卡.model3.json', document.baseURI).href;
+    log('模型地址: ' + modelURL);
+    log('请求 model3.json 及资源…');
     model = await Live2DModel.from(modelURL);
+    log('模型已加载 ' + Math.round(model.width) + '×' + Math.round(model.height), 'ok');
+    if (model.textures) log('纹理数: ' + model.textures.length, 'ok');
     model.anchor.set(0.5, 0.5);
     app.stage.addChild(model);
     fitModel();
@@ -107,7 +119,10 @@ export async function initLive2D() {
       var id = EXPR_KEYS[e.key];
       if (id) setExpression(id);
     });
+
+    log('Live2D 就绪', 'ok');
   } catch (e) {
+    log('Live2D 加载失败: ' + (e && (e.message || e)), 'err');
     console.warn('Live2D 加载失败:', e);
   }
 }

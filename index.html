@@ -119,12 +119,55 @@
         <div id="gui-body"></div>
       </div>
 
+      <!-- 调试：加载进程输出（?nolog=1 可关闭） -->
+      <div id="loadlog">
+        <div id="loadlog-head">加载进程 <span id="loadlog-close" title="关闭">✕</span></div>
+        <div id="loadlog-body"></div>
+      </div>
+
     </div>
   </div>
 
+  <!-- 调试：加载进程输出（经典脚本，早于模块执行） -->
+  <script>
+  (function () {
+    var panel = document.getElementById('loadlog');
+    var body = document.getElementById('loadlog-body');
+    if (/[?&]nolog=1/.test(location.search)) { panel.style.display = 'none'; }
+    function log(msg, kind) {
+      if (!body) return;
+      var line = document.createElement('div');
+      line.className = 'll ' + (kind || 'info');
+      var t = new Date();
+      var ts = ('0' + t.getMinutes()).slice(-2) + ':' + ('0' + t.getSeconds()).slice(-2);
+      line.textContent = '[' + ts + '] ' + msg;
+      body.appendChild(line);
+      body.scrollTop = body.scrollHeight;
+      (kind === 'err' ? console.error : console.log)('[load]', msg);
+    }
+    window.__log = log;
+    var close = document.getElementById('loadlog-close');
+    if (close) close.addEventListener('click', function () { panel.style.display = 'none'; });
+    /* 捕获 JS 异常与资源(脚本/图片/样式)加载失败 */
+    window.addEventListener('error', function (e) {
+      if (e && e.target && e.target !== window && e.target.tagName) {
+        var url = e.target.src || e.target.href || '';
+        log('资源加载失败 <' + e.target.tagName.toLowerCase() + '> ' + url, 'err');
+      } else if (e && e.message) {
+        log('JS 错误: ' + e.message + ' @' + (e.filename || '') + ':' + (e.lineno || ''), 'err');
+      }
+    }, true);
+    window.addEventListener('unhandledrejection', function (e) {
+      var r = e && e.reason;
+      log('Promise 未捕获: ' + (r && (r.message || r.stack || r)), 'err');
+    });
+    log('页面开始加载');
+  })();
+  </script>
+
   <!-- LIBRARIES -->
-  <script type="text/javascript" src="./js/three.min.js?v=42"></script>
-  <script type="text/javascript" src="./js/tween.js?v=42"></script>
+  <script type="text/javascript" src="./js/three.min.js?v=43"></script>
+  <script type="text/javascript" src="./js/tween.js?v=43"></script>
 
   <!-- Live2D -->
   <script type="importmap">
@@ -177,31 +220,30 @@
   }
 }
   </script>
-  <script src="js/live2d/live2dcubismcore.min.js?v=42"></script>
+  <script src="js/live2d/live2dcubismcore.min.js?v=43"></script>
   <script type="module">
-    import { initLive2D, showLive2D, hideLive2D, setExpression } from './js/live2d/live2d.js?v=42';
+    import { initLive2D, showLive2D, hideLive2D, setExpression } from './js/live2d/live2d.js?v=43';
     window.__live2d = { show: showLive2D, hide: hideLive2D, init: initLive2D, setExpression: setExpression };
     initLive2D();
   </script>
 
   <!-- APP -->
-  <script type="text/javascript" src="./js/util.js?v=42"></script>
-  <script type="text/javascript" src="./js/dom.js?v=42"></script>
-  <script type="text/javascript" src="./js/detector.js?v=42"></script>
-  <script type="text/javascript" src="./js/data.js?v=42"></script>
-  <script type="text/javascript" src="./js/galaxy.js?v=42"></script>
-  <script type="text/javascript" src="./js/starsystem.js?v=42"></script>
-  <script type="text/javascript" src="./js/threebody.js?v=42"></script>
-  <script type="text/javascript" src="./js/mousekeyboard.js?v=42"></script>
-  <script type="text/javascript" src="./js/urlArgs.js?v=42"></script>
-  <script type="text/javascript" src="./js/helphud.js?v=42"></script>
-  <script type="text/javascript" src="./js/css3worldspace.js?v=42"></script>
-  <script type="text/javascript" src="./js/spacehelpers.js?v=42"></script>
-  <script type="text/javascript" src="./js/marker.js?v=42"></script>
-  <script type="text/javascript" src="./js/minimap.js?v=42"></script>
-  <script type="text/javascript" src="./js/tour.js?v=42"></script>
-  <script type="text/javascript" src="./js/gui.js?v=42"></script>
-  <script type="text/javascript" src="./js/main.js?v=42"></script>
+  <script type="text/javascript" src="./js/util.js?v=43"></script>
+  <script type="text/javascript" src="./js/dom.js?v=43"></script>
+  <script type="text/javascript" src="./js/detector.js?v=43"></script>
+  <script type="text/javascript" src="./js/data.js?v=43"></script>
+  <script type="text/javascript" src="./js/galaxy.js?v=43"></script>
+  <script type="text/javascript" src="./js/starsystem.js?v=43"></script>
+  <script type="text/javascript" src="./js/threebody.js?v=43"></script>
+  <script type="text/javascript" src="./js/mousekeyboard.js?v=43"></script>
+  <script type="text/javascript" src="./js/urlArgs.js?v=43"></script>
+  <script type="text/javascript" src="./js/css3worldspace.js?v=43"></script>
+  <script type="text/javascript" src="./js/spacehelpers.js?v=43"></script>
+  <script type="text/javascript" src="./js/marker.js?v=43"></script>
+  <script type="text/javascript" src="./js/minimap.js?v=43"></script>
+  <script type="text/javascript" src="./js/tour.js?v=43"></script>
+  <script type="text/javascript" src="./js/gui.js?v=43"></script>
+  <script type="text/javascript" src="./js/main.js?v=43"></script>
 
 </body>
 </html>

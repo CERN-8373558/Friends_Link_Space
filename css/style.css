@@ -278,6 +278,41 @@ body {
   user-select: none;
   text-shadow: 0 0 6px rgba(0, 0, 0, 0.8); }
 
+/* ---------- 调试：加载进程输出 ---------- */
+#loadlog {
+  position: fixed;
+  left: 20px;
+  bottom: 44px;
+  width: 340px;
+  max-height: 42vh;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(120, 200, 255, 0.35);
+  border-radius: 6px;
+  color: #bfe6ff;
+  font: 11px/1.5 'Lekton', 'Noto Sans SC', 'Microsoft YaHei', monospace;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; }
+#loadlog-head {
+  padding: 4px 8px;
+  background: rgba(20, 40, 60, 0.9);
+  border-bottom: 1px solid rgba(120, 200, 255, 0.25);
+  font-weight: bold;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+#loadlog-close { cursor: pointer; opacity: 0.7; padding: 0 4px; }
+#loadlog-close:hover { opacity: 1; }
+#loadlog-body {
+  padding: 4px 8px;
+  overflow-y: auto;
+  word-break: break-all; }
+#loadlog-body .ll { white-space: pre-wrap; }
+#loadlog-body .ll.ok { color: #7dffa8; }
+#loadlog-body .ll.err { color: #ff8a8a; }
+
 /* ---------- 左下角恒星名 ---------- */
 #star-name {
   position: fixed;
