@@ -77,7 +77,8 @@
         resizeTo: window
       });
       window.__app = app;
-      var model = await Live2DModel.from('live2d/peilika/Q扁佩丽卡.model3.json');
+      var modelURL = new URL('live2d/peilika/Q扁佩丽卡.model3.json', document.baseURI).href;
+      var model = await Live2DModel.from(modelURL);
       window.__model = model;
       console.log('model size', model.width, model.height, 'anchor', model.anchor.x, model.anchor.y);
       var s = Math.min(300 / Math.max(model.width, 1), 0.6);

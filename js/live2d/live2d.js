@@ -68,7 +68,10 @@ export async function initLive2D() {
       resizeTo: wrap,
       antialias: true
     });
-    model = await Live2DModel.from('live2d/peilika/Q扁佩丽卡.model3.json');
+    /* 模型地址用绝对 URL：库内旧版 url.resolve 以 location.origin 为基准，
+       相对路径会在 GitHub Pages 子路径下错误地解析到域名根（404） */
+    var modelURL = new URL('live2d/peilika/Q扁佩丽卡.model3.json', document.baseURI).href;
+    model = await Live2DModel.from(modelURL);
     model.anchor.set(0.5, 0.5);
     app.stage.addChild(model);
     fitModel();
