@@ -1,0 +1,81 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "Q扁佩丽卡.moc3",
+    "Textures": [
+      "Q扁佩丽卡.1024/texture_00.png"
+    ],
+    "Physics": "Q扁佩丽卡.physics3.json",
+    "DisplayInfo": "Q扁佩丽卡.cdi3.json",
+    "Motions": {
+      "Idle": [
+        {
+          "File": "idle.motion3.json",
+          "FadeInTime": 0.5,
+          "FadeOutTime": 0.5
+        }
+      ]
+    },
+    "Expressions": [
+      {
+        "Name": "dai",
+        "File": "呆.exp3.json"
+      },
+      {
+        "Name": "weapon",
+        "File": "武器.exp3.json"
+      },
+      {
+        "Name": "pad",
+        "File": "平板.exp3.json"
+      },
+      {
+        "Name": "sing",
+        "File": "唱歌.exp3.json"
+      },
+      {
+        "Name": "game",
+        "File": "游戏.exp3.json"
+      },
+      {
+        "Name": "cry",
+        "File": "哭.exp3.json"
+      },
+      {
+        "Name": "sad",
+        "File": "泪.exp3.json"
+      },
+      {
+        "Name": "han",
+        "File": "汗.exp3.json"
+      },
+      {
+        "Name": "angry",
+        "File": "生气.exp3.json"
+      },
+      {
+        "Name": "yinan",
+        "File": "阴暗.exp3.json"
+      },
+      {
+        "Name": "lianhong",
+        "File": "脸红.exp3.json"
+      }
+    ]
+  },
+  "Groups": [
+    {
+      "Target": "Parameter",
+      "Name": "EyeBlink",
+      "Ids": [
+        "ParamEyeLOpen",
+        "ParamEyeROpen"
+      ]
+    },
+    {
+      "Target": "Parameter",
+      "Name": "LipSync",
+      "Ids": []
+    }
+  ]
+}

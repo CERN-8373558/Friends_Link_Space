@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="友链宇宙——每一个朋友都是一颗恒星。">
+  <title>友链宇宙 · Friend Universe</title>
+  <meta name="viewport" content="user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Lekton|Lora:400,700,400italic" rel="stylesheet" type="text/css">
+  <script>try{localStorage.removeItem('friend-universe-links')}catch(e){}</script>
+</head>
+<body onload="start()">
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div>
+      <p id="loadtext">Loading&hellip;</p>
+    </div>
+  </div>
+
+  <div id="layout">
+    <div id="visualization">
+
+      <!-- WebGL 场景容器 -->
+      <div id="glContainer"></div>
+
+      <!-- CSS3D 标签世界 -->
+      <div id="css-world">
+        <div id="css-camera">
+          <span id="marker_template" class="marker"><span class="name">Star</span></span>
+        </div>
+      </div>
+
+      <!-- 2D 标签层（始终正对镜头的屏幕空间标签） -->
+      <div id="label-layer"></div>
+
+      <!-- 顶部：标题 + 搜索 + 分组页签 + 随机 -->
+      <div id="topbar" class="ui">
+        <div id="topbar-main">
+          <button id="topbar-toggle" title="展开 / 收起搜索与分类">▾</button>
+        </div>
+        <div id="topbar-extras">
+          <div id="topbar-row">
+            <div id="search-wrap">
+              <input id="searchbox" type="text" placeholder="搜索恒星 / 行星…" autocomplete="off">
+              <div id="search-results"></div>
+            </div>
+            <button id="random-btn" title="随机一颗星">✦ 随机一颗星</button>
+          </div>
+          <div id="tag-tabs"></div>
+        </div>
+      </div>
+
+      <!-- 左下角缩放倍率 -->
+      <div id="zoom-hud"><span id="zoom-value">1.00×</span></div>
+
+      <!-- 左下角恒星名 -->
+      <div id="star-name"><span></span></div>
+
+      <!-- 左侧详情面板 -->
+      <div id="detailContainer">
+        <div id="detailClose">✕</div>
+        <div id="detailTitle"><span></span></div>
+        <div id="detailBody"></div>
+        <div id="detailFooter">友链宇宙 · 一个朋友就是一颗恒星</div>
+      </div>
+
+      <!-- 右下角迷你地图 -->
+      <div id="minimap">
+        <div id="zoom-levels">
+          <div id="zoom-backdrop"></div>
+          <div id="zoom-cursor"></div>
+        </div>
+        <div id="about">?</div>
+        <div id="volume">♪</div>
+      </div>
+
+      <!-- 彩蛋：空间站（到阈值时只显示这张图片） -->
+      <div id="easter-window">
+        <div id="win-bg"></div>
+      </div>
+
+      <!-- 彩蛋：佩丽卡 Live2D 看板娘（从底部滑入屏幕中间） -->
+      <div id="live2d-wrap">
+        <canvas id="live2d-canvas"></canvas>
+      </div>
+
+      <!-- 佩丽卡表情按钮 -->
+      <div id="expr-buttons">
+        <button data-expr="dai">呆</button>
+        <button data-expr="weapon">武器</button>
+        <button data-expr="pad">平板</button>
+        <button data-expr="sing">唱歌</button>
+        <button data-expr="game">游戏</button>
+        <button data-expr="cry">哭</button>
+        <button data-expr="sad">泪</button>
+        <button data-expr="han">汗</button>
+        <button data-expr="angry">生气</button>
+        <button data-expr="yinan">阴暗</button>
+        <button data-expr="lianhong">脸红</button>
+      </div>
+
+      <!-- 底部中央 meta（停止 / 跳过） -->
+      <div id="meta"><p><a href="#">Start</a></p></div>
+
+      <!-- 影院黑边 + 消息 -->
+      <div id="theater">
+        <div class="top-bar"></div>
+        <div class="bottom-bar"></div>
+        <div class="message"><p><span></span></p></div>
+      </div>
+
+      <!-- 右上角：显示 / 隐藏设置 -->
+      <button id="gui-toggle" title="显示 / 隐藏设置">⚙</button>
+
+      <!-- 控制面板 -->
+      <div id="gui-panel" style="display:none;">
+        <div id="gui-title">Controls</div>
+        <div id="gui-body"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LIBRARIES -->
+  <script type="text/javascript" src="./js/three.min.js?v=41"></script>
+  <script type="text/javascript" src="./js/tween.js?v=41"></script>
+
+  <!-- Live2D -->
+  <script type="importmap">
+{
+  "imports": {
+    "@pixi/accessibility": "./js/live2d/vendor/accessibility.js",
+    "@pixi/app": "./js/live2d/vendor/app.js",
+    "@pixi/compressed-textures": "./js/live2d/vendor/compressed-textures.js",
+    "@pixi/constants": "./js/live2d/vendor/constants.js",
+    "@pixi/core": "./js/live2d/vendor/core.js",
+    "@pixi/display": "./js/live2d/vendor/display.js",
+    "@pixi/extensions": "./js/live2d/vendor/extensions.js",
+    "@pixi/extract": "./js/live2d/vendor/extract.js",
+    "@pixi/filter-alpha": "./js/live2d/vendor/filter-alpha.js",
+    "@pixi/filter-blur": "./js/live2d/vendor/filter-blur.js",
+    "@pixi/filter-color-matrix": "./js/live2d/vendor/filter-color-matrix.js",
+    "@pixi/filter-displacement": "./js/live2d/vendor/filter-displacement.js",
+    "@pixi/filter-fxaa": "./js/live2d/vendor/filter-fxaa.js",
+    "@pixi/filter-noise": "./js/live2d/vendor/filter-noise.js",
+    "@pixi/graphics": "./js/live2d/vendor/graphics.js",
+    "@pixi/interaction": "./js/live2d/vendor/interaction.js",
+    "@pixi/loaders": "./js/live2d/vendor/loaders.js",
+    "@pixi/math": "./js/live2d/vendor/math.js",
+    "@pixi/mesh-extras": "./js/live2d/vendor/mesh-extras.js",
+    "@pixi/mesh": "./js/live2d/vendor/mesh.js",
+    "@pixi/mixin-cache-as-bitmap": "./js/live2d/vendor/mixin-cache-as-bitmap.js",
+    "@pixi/mixin-get-child-by-name": "./js/live2d/vendor/mixin-get-child-by-name.js",
+    "@pixi/mixin-get-global-position": "./js/live2d/vendor/mixin-get-global-position.js",
+    "@pixi/particle-container": "./js/live2d/vendor/particle-container.js",
+    "pixi.js": "./js/live2d/vendor/pixi.js",
+    "@pixi/polyfill": "./js/live2d/vendor/polyfill.js",
+    "@pixi/prepare": "./js/live2d/vendor/prepare.js",
+    "@pixi/runner": "./js/live2d/vendor/runner.js",
+    "@pixi/settings": "./js/live2d/vendor/settings.js",
+    "@pixi/sprite-animated": "./js/live2d/vendor/sprite-animated.js",
+    "@pixi/sprite-tiling": "./js/live2d/vendor/sprite-tiling.js",
+    "@pixi/sprite": "./js/live2d/vendor/sprite.js",
+    "@pixi/spritesheet": "./js/live2d/vendor/spritesheet.js",
+    "@pixi/text-bitmap": "./js/live2d/vendor/text-bitmap.js",
+    "@pixi/text": "./js/live2d/vendor/text.js",
+    "@pixi/ticker": "./js/live2d/vendor/ticker.js",
+    "@pixi/utils": "./js/live2d/vendor/utils.js",
+    "pixi-live2d-display": "./js/live2d/index.es.js",
+    "pixi-live2d-display/cubism4": "./js/live2d/cubism4.es.js",
+    "eventemitter3": "./js/live2d/vendor/eventemitter3.js",
+    "earcut": "./js/live2d/vendor/earcut.js",
+    "promise-polyfill": "./js/live2d/vendor/promise-polyfill.js",
+    "object-assign": "./js/live2d/vendor/object-assign.js",
+    "url": "./js/live2d/vendor/url.js"
+  }
+}
+  </script>
+  <script src="js/live2d/live2dcubismcore.min.js?v=41"></script>
+  <script type="module">
+    import { initLive2D, showLive2D, hideLive2D, setExpression } from './js/live2d/live2d.js?v=41';
+    window.__live2d = { show: showLive2D, hide: hideLive2D, init: initLive2D, setExpression: setExpression };
+    initLive2D();
+  </script>
+
+  <!-- APP -->
+  <script type="text/javascript" src="./js/util.js?v=41"></script>
+  <script type="text/javascript" src="./js/dom.js?v=41"></script>
+  <script type="text/javascript" src="./js/detector.js?v=41"></script>
+  <script type="text/javascript" src="./js/data.js?v=41"></script>
+  <script type="text/javascript" src="./js/galaxy.js?v=41"></script>
+  <script type="text/javascript" src="./js/starsystem.js?v=41"></script>
+  <script type="text/javascript" src="./js/threebody.js?v=41"></script>
+  <script type="text/javascript" src="./js/mousekeyboard.js?v=41"></script>
+  <script type="text/javascript" src="./js/urlArgs.js?v=41"></script>
+  <script type="text/javascript" src="./js/helphud.js?v=41"></script>
+  <script type="text/javascript" src="./js/css3worldspace.js?v=41"></script>
+  <script type="text/javascript" src="./js/spacehelpers.js?v=41"></script>
+  <script type="text/javascript" src="./js/marker.js?v=41"></script>
+  <script type="text/javascript" src="./js/minimap.js?v=41"></script>
+  <script type="text/javascript" src="./js/tour.js?v=41"></script>
+  <script type="text/javascript" src="./js/gui.js?v=41"></script>
+  <script type="text/javascript" src="./js/main.js?v=41"></script>
+
+</body>
+</html>

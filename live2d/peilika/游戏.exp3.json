@@ -1,0 +1,30 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "game",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "Param58",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "Param60",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "rarm2",
+            "Value": -1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "larm2",
+            "Value": -1.0,
+            "Blend": "Add"
+        }
+    ]
+}

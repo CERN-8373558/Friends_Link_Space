@@ -1,0 +1,20 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "pad",
+            "Value": 1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "rarm2",
+            "Value": -1.0,
+            "Blend": "Add"
+        },
+        {
+            "Id": "larm2",
+            "Value": -1.0,
+            "Blend": "Add"
+        }
+    ]
+}

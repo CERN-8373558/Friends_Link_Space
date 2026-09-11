@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>live2d test</title>
+  <style>body{margin:0;background:#111;overflow:hidden}#cv{width:100vw;height:100vh}</style>
+</head>
+<body>
+  <canvas id="cv"></canvas>
+  <script type="importmap">
+{
+  "imports": {
+    "@pixi/accessibility": "./js/live2d/vendor/accessibility.js",
+    "@pixi/app": "./js/live2d/vendor/app.js",
+    "@pixi/compressed-textures": "./js/live2d/vendor/compressed-textures.js",
+    "@pixi/constants": "./js/live2d/vendor/constants.js",
+    "@pixi/core": "./js/live2d/vendor/core.js",
+    "@pixi/display": "./js/live2d/vendor/display.js",
+    "@pixi/extensions": "./js/live2d/vendor/extensions.js",
+    "@pixi/extract": "./js/live2d/vendor/extract.js",
+    "@pixi/filter-alpha": "./js/live2d/vendor/filter-alpha.js",
+    "@pixi/filter-blur": "./js/live2d/vendor/filter-blur.js",
+    "@pixi/filter-color-matrix": "./js/live2d/vendor/filter-color-matrix.js",
+    "@pixi/filter-displacement": "./js/live2d/vendor/filter-displacement.js",
+    "@pixi/filter-fxaa": "./js/live2d/vendor/filter-fxaa.js",
+    "@pixi/filter-noise": "./js/live2d/vendor/filter-noise.js",
+    "@pixi/graphics": "./js/live2d/vendor/graphics.js",
+    "@pixi/interaction": "./js/live2d/vendor/interaction.js",
+    "@pixi/loaders": "./js/live2d/vendor/loaders.js",
+    "@pixi/math": "./js/live2d/vendor/math.js",
+    "@pixi/mesh-extras": "./js/live2d/vendor/mesh-extras.js",
+    "@pixi/mesh": "./js/live2d/vendor/mesh.js",
+    "@pixi/mixin-cache-as-bitmap": "./js/live2d/vendor/mixin-cache-as-bitmap.js",
+    "@pixi/mixin-get-child-by-name": "./js/live2d/vendor/mixin-get-child-by-name.js",
+    "@pixi/mixin-get-global-position": "./js/live2d/vendor/mixin-get-global-position.js",
+    "@pixi/particle-container": "./js/live2d/vendor/particle-container.js",
+    "pixi.js": "./js/live2d/vendor/pixi.js",
+    "@pixi/polyfill": "./js/live2d/vendor/polyfill.js",
+    "@pixi/prepare": "./js/live2d/vendor/prepare.js",
+    "@pixi/runner": "./js/live2d/vendor/runner.js",
+    "@pixi/settings": "./js/live2d/vendor/settings.js",
+    "@pixi/sprite-animated": "./js/live2d/vendor/sprite-animated.js",
+    "@pixi/sprite-tiling": "./js/live2d/vendor/sprite-tiling.js",
+    "@pixi/sprite": "./js/live2d/vendor/sprite.js",
+    "@pixi/spritesheet": "./js/live2d/vendor/spritesheet.js",
+    "@pixi/text-bitmap": "./js/live2d/vendor/text-bitmap.js",
+    "@pixi/text": "./js/live2d/vendor/text.js",
+    "@pixi/ticker": "./js/live2d/vendor/ticker.js",
+    "@pixi/utils": "./js/live2d/vendor/utils.js",
+    "pixi-live2d-display": "./js/live2d/index.es.js",
+    "pixi-live2d-display/cubism4": "./js/live2d/cubism4.es.js",
+    "eventemitter3": "./js/live2d/vendor/eventemitter3.js",
+    "earcut": "./js/live2d/vendor/earcut.js",
+    "promise-polyfill": "./js/live2d/vendor/promise-polyfill.js",
+    "object-assign": "./js/live2d/vendor/object-assign.js",
+    "url": "./js/live2d/vendor/url.js"
+  }
+}
+  </script>
+  <script src="js/live2d/live2dcubismcore.min.js"></script>
+  <script>
+    window.__errs = [];
+    window.addEventListener('error', function (e) { window.__errs.push('error: ' + e.message); });
+    window.addEventListener('unhandledrejection', function (e) { window.__errs.push('rejection: ' + String(e.reason && e.reason.message || e.reason)); });
+  </script>
+  <script type="module">
+    window.__l2d = { loaded: false, error: null };
+    import { Application } from 'pixi.js';
+    import { Live2DModel } from 'pixi-live2d-display/cubism4';
+
+    try {
+      var app = new Application({
+        view: document.getElementById('cv'),
+        transparent: true,
+        backgroundAlpha: 0,
+        autoStart: true,
+        resizeTo: window
+      });
+      window.__app = app;
+      var model = await Live2DModel.from('live2d/peilika/Q扁佩丽卡.model3.json');
+      window.__model = model;
+      console.log('model size', model.width, model.height, 'anchor', model.anchor.x, model.anchor.y);
+      var s = Math.min(300 / Math.max(model.width, 1), 0.6);
+      model.scale.set(s);
+      model.anchor.set(0.5, 1.0);
+      model.x = app.screen.width / 2;
+      model.y = app.screen.height * 0.95;
+      app.stage.addChild(model);
+      window.__l2d.loaded = true;
+      document.title = 'l2d-ok';
+      console.log('model loaded ok');
+    } catch (e) {
+      window.__l2d.error = String(e && e.stack || e);
+      document.title = 'l2d-fail';
+      console.error('load error:', e);
+    }
+  </script>
+</body>
+</html>
